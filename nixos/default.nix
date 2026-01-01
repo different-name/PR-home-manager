@@ -50,7 +50,7 @@ in
       systemd.services = lib.mapAttrs' (
         _: usercfg:
         let
-          username = usercfg.home.username;
+          inherit (usercfg.home) username;
           driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
         in
         lib.nameValuePair "home-manager-${utils.escapeSystemdPath username}" {
@@ -69,7 +69,7 @@ in
           stopIfChanged = false;
 
           serviceConfig = {
-            User = usercfg.home.username;
+            User = username;
             Type = "oneshot";
             TimeoutStartSec = "5m";
             SyslogIdentifier = "hm-activate-${username}";
